@@ -43,7 +43,7 @@ jobs:
       - name: Upload Logs
         uses: actions/upload-artifact@v3
         with:
-          name: kind-logs
+          name: kind-logs-${{ matrix.k8s }}
           path: /tmp/kind-logs
   build-image:
     name: Image
