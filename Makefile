@@ -15,8 +15,15 @@ cluster:
 cluster-go-away:
 	kind delete cluster
 
-test: cluster-go-away cluster
+build:
 	skaffold config set --global collect-metrics false
 	skaffold build -q > build_result.json
+
+deploy: build
 	skaffold deploy --load-images=true -a build_result.json
+
+verify:
 	skaffold verify -a build_result.json
+
+test: cluster-go-away cluster deploy verify
+	

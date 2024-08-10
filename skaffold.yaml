@@ -13,11 +13,17 @@ manifests:
   rawYaml:
     - tests/k8s/job.yaml
 verify:
-  - name: mgr-test-container
+  - name: verify-secret-created
     container:
-      name: integration-test-container
+      name: verify-secret-created
       image: ghcr.io/curium-rocks/wg-kubectl:main
     executionMode:
       kubernetesCluster:
-        jobManifestPath: tests/k8s/verify.yaml
-        
+        jobManifestPath: tests/k8s/verify-secret-created.yaml
+  - name: verify-secret-works
+    container:
+      name: verify-secret-works
+      image: ghcr.io/curium-rocks/wg-kubectl:main
+    executionMode:
+      kubernetesCluster:
+        jobManifestPath: tests/k8s/verify-secret-works-with-wg.yaml
