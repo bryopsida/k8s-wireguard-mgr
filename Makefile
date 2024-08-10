@@ -1,4 +1,4 @@
-
+CONTEXT_NAME ?= kind
 
 image:
 	docker build . -t ghcr.io/bryopsida/k8s-wireguard-mgr:local
@@ -31,6 +31,6 @@ clean-logs:
 
 logs: clean-logs
 	mkdir -p /tmp/kind-logs
-	kind export logs /tmp/kind-logs
+	kind export logs /tmp/kind-logs --name=$(CONTEXT_NAME)
 
 test: deploy verify

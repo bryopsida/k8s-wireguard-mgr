@@ -42,6 +42,8 @@ jobs:
         run: make test logs
       - name: Upload Logs
         uses: actions/upload-artifact@v3
+        env:
+          CONTEXT_NAME: kind-chart-testing
         with:
           name: kind-logs-${{ matrix.k8s }}
           path: /tmp/kind-logs
