@@ -12,14 +12,31 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        k8s:
+          - v1.29.0
+          - v1.28.0
+          - v1.27.0
+          - v1.26.0
+          - v1.25.3
+          - v1.24.7
+          - v1.23.13
     steps:
       - name: Checkout
         uses: actions/checkout@b32f140b0c872d58512e0a66172253c302617b90 
         with:
           fetch-depth: 0
-      - uses: actions/setup-go@v5
+      - name: Create kind ${{ matrix.k8s }} cluster
+        uses: helm/kind-action@8300bd06573c6f1881ff7a3261ed38b7f05d202f 
         with:
-          go-version: 'stable'
+          node_image: kindest/node:${{ matrix.k8s }}
+          version: v0.20.0
+      - name: Install Skaffold
+        run: |
+          curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
+          sudo install skaffold /usr/local/bin/
       - name: Test
         run: make test
   build-image:
