@@ -39,11 +39,11 @@ jobs:
           curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
           sudo install skaffold /usr/local/bin/
       - name: Test
+        env:
+          CONTEXT_NAME: kind-chart-testing
         run: make test logs
       - name: Upload Logs
         uses: actions/upload-artifact@v3
-        env:
-          CONTEXT_NAME: kind-chart-testing
         with:
           name: kind-logs-${{ matrix.k8s }}
           path: /tmp/kind-logs
