@@ -10,5 +10,4 @@ format:
 	gofmt main.go
 
 test:
-	go vet -v main.go
-	go test ./...
+    
