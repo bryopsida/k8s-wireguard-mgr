@@ -43,7 +43,7 @@ jobs:
           CONTEXT_NAME: chart-testing
         run: make test logs
       - name: Upload Logs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: kind-logs-${{ matrix.k8s }}
           path: /tmp/kind-logs
