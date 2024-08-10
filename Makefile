@@ -1,4 +1,4 @@
-READY_STATE ?= true
+
 
 image:
 	docker build . -t ghcr.io/bryopsida/k8s-wireguard-mgr:local
@@ -25,5 +25,5 @@ deploy: build
 verify:
 	skaffold verify -a build_result.json
 
-test: cluster-go-away cluster deploy verify
+test: deploy verify
 	
