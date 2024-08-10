@@ -12,3 +12,12 @@ build:
 manifests:
   rawYaml:
     - tests/k8s/job.yaml
+verify:
+  - name: mgr-test-container
+    container:
+      name: integration-test-container
+      image: ghcr.io/curium-rocks/wg-kubectl:main
+    executionMode:
+      kubernetesCluster:
+        jobManifestPath: tests/k8s/verify.yaml
+        

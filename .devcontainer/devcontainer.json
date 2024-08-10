@@ -6,6 +6,7 @@
         "ghcr.io/devcontainers/features/common-utils:2": {},
         "ghcr.io/devcontainers/features/docker-in-docker:2": {},
         "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
+        "ghcr.io/rio/features/skaffold:2": {},
         "ghcr.io/mpriscella/features/kind:1": {},
         "ghcr.io/devcontainers-contrib/features/prettier:1": {}
     },
@@ -19,7 +20,8 @@
                 "github.vscode-github-actions",
                 "ms-azuretools.vscode-docker",
                 "johnpapa.vscode-peacock",
-                "timonwong.shellcheck"
+                "timonwong.shellcheck",
+                "ms-vscode.makefile-tools"
             ],
             "settings": {
                 "editor.tabSize": 2,

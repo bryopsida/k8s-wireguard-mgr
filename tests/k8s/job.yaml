@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: secret-mgr-sa
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: secret-mgr-role
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: secret-mgr-rolebinding
+subjects:
+- kind: ServiceAccount
+  name: secret-mgr-sa
+  namespace: default
+roleRef:
+  kind: Role
+  name: secret-mgr-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: k8s-wg-mgr-job
+spec:
+  template:
+    spec:
+      serviceAccountName: secret-mgr-sa
+      containers:
+      - name: k8s-wg-mgr-container
+        image: ghcr.io/bryopsida/k8s-wireguard-mgr
+        env:
+        - name: K8S_WG_MGR_SERVER_SECRET_NAME
+          value: "test-wg-secret"
+      restartPolicy: Never
