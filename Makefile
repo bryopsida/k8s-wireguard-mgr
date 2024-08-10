@@ -23,7 +23,14 @@ deploy: build
 	skaffold deploy --load-images=true -a build_result.json
 
 verify:
-	skaffold verify -a build_result.json
+	skaffold verify -a build_result.json -v trace
+	kubectl logs -l job-name=verify-secret-works --all-containers=true --tail=-1
+
+clean-logs:
+	rm -fr /tmp/kind-logs
+
+logs: clean-logs
+	mkdir -p /tmp/kind-logs
+	kind export logs /tmp/kind-logs
 
 test: deploy verify
-	

@@ -39,7 +39,12 @@ jobs:
           curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
           sudo install skaffold /usr/local/bin/
       - name: Test
-        run: make test
+        run: make test logs
+      - name: Upload Logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: kind-logs
+          path: /tmp/kind-logs
   build-image:
     name: Image
     permissions:
