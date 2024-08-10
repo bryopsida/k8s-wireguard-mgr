@@ -40,7 +40,7 @@ jobs:
           sudo install skaffold /usr/local/bin/
       - name: Test
         env:
-          CONTEXT_NAME: kind-chart-testing
+          CONTEXT_NAME: chart-testing
         run: make test logs
       - name: Upload Logs
         uses: actions/upload-artifact@v3
