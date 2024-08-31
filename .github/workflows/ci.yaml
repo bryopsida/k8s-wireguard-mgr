@@ -62,3 +62,4 @@ jobs:
       image_name: k8s-wireguard-mgr
       registry: 'ghcr.io/bryopsida'
       push_in_pr: true
+      platforms: 'linux/amd64,linux/arm64,linux/riscv64'
