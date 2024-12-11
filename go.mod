@@ -5,7 +5,7 @@ go 1.22.2
 require (
 	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20230429144221-925a1e7659e6
 	k8s.io/api v0.31.3
-	k8s.io/apimachinery v0.31.3
+	k8s.io/apimachinery v0.31.4
 	k8s.io/client-go v0.31.3
 )
 
