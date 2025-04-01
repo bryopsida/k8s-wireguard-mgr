@@ -2,7 +2,7 @@ module github.com/bryopsida/k8s-wireguard-mgr
 
 go 1.23.0
 
-toolchain go1.24.1
+toolchain go1.24.2
 
 require (
 	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20241231184526-a9ab2273dd10
