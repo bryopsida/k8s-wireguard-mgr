@@ -45,8 +45,8 @@ func GetClientSet() (*kubernetes.Clientset, error) {
 	return kubernetes.NewForConfig(config)
 }
 
-func CreateWireguardServerSecret(clientset *kubernetes.Clientset, secretName string, privateKey wgtypes.Key) {
-	createSecret(clientset, secretName, map[string]string{
+func CreateWireguardServerSecret(clientset *kubernetes.Clientset, secretName string, privateKey wgtypes.Key) bool {
+	return createSecret(clientset, secretName, map[string]string{
 		"privatekey": privateKey.String(),
 	})
 }
@@ -64,7 +64,7 @@ func CreateWireguardServerPublicKey(clientset *kubernetes.Clientset, name string
 	}
 }
 
-func createSecret(clientset *kubernetes.Clientset, secretName string, data map[string]string) {
+func createSecret(clientset *kubernetes.Clientset, secretName string, data map[string]string) bool {
 	// try and create the secret, if it already exists we will get an error
 	// check the error result, if it's the error about it already existing
 	// exit with status 0, this is done because we do not want to request to read access to the secret in our role
@@ -83,9 +83,11 @@ func createSecret(clientset *kubernetes.Clientset, secretName string, data map[s
 			panic(err.Error())
 		} else {
 			log.Printf("Secret %s already exists. Skipping creation.", secretName)
+			return false
 		}
 	} else {
 		log.Printf("Secret %s created successfully.", secretName)
+		return true
 	}
 }
 

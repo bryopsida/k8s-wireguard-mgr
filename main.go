@@ -16,7 +16,11 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	kubernetes.CreateWireguardServerSecret(clientset, secretName, key)
+	created := kubernetes.CreateWireguardServerSecret(clientset, secretName, key)
+	if !created {
+		log.Println("Finished")
+		return
+	}
 	publicKeyName := os.Getenv("K8S_WG_MGR_SERVER_PUBLIC_KEY_NAME")
 	if publicKeyName == "" {
 		publicKeyName = secretName + "-public"
