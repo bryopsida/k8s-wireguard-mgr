@@ -37,16 +37,34 @@ func kubernetesErrorIsAlreadyExists(err error) bool {
 	return reasonForError(err) == metav1.StatusReasonAlreadyExists
 }
 
-func CreateWireguardServerSecret(secretName string, privateKey wgtypes.Key) {
+func GetClientSet() (*kubernetes.Clientset, error) {
 	config, err := rest.InClusterConfig()
 	if err != nil {
-		panic(err.Error())
+		return nil, err
 	}
+	return kubernetes.NewForConfig(config)
+}
 
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		panic(err.Error())
+func CreateWireguardServerSecret(clientset *kubernetes.Clientset, secretName string, privateKey wgtypes.Key) {
+	createSecret(clientset, secretName, map[string]string{
+		"privatekey": privateKey.String(),
+	})
+}
+
+func CreateWireguardServerPublicKey(clientset *kubernetes.Clientset, name string, publicKey wgtypes.Key, objectType string) {
+	data := map[string]string{
+		"publickey": publicKey.String(),
 	}
+	if objectType == "secret" {
+		createSecret(clientset, name, data)
+	} else if objectType == "configmap" {
+		createConfigMap(clientset, name, data)
+	} else {
+		panic(errors.New("object type must be secret or configmap"))
+	}
+}
+
+func createSecret(clientset *kubernetes.Clientset, secretName string, data map[string]string) {
 	// try and create the secret, if it already exists we will get an error
 	// check the error result, if it's the error about it already existing
 	// exit with status 0, this is done because we do not want to request to read access to the secret in our role
@@ -56,19 +74,37 @@ func CreateWireguardServerSecret(secretName string, privateKey wgtypes.Key) {
 			Name:      secretName,
 			Namespace: getNamespace(),
 		},
-		StringData: map[string]string{
-			"privatekey": privateKey.String(),
-		},
-		Type: corev1.SecretTypeOpaque,
+		StringData: data,
+		Type:       corev1.SecretTypeOpaque,
 	}
-	_, err = clientset.CoreV1().Secrets(getNamespace()).Create(context.TODO(), secret, metav1.CreateOptions{})
+	_, err := clientset.CoreV1().Secrets(getNamespace()).Create(context.TODO(), secret, metav1.CreateOptions{})
 	if err != nil {
 		if !kubernetesErrorIsAlreadyExists(err) {
 			panic(err.Error())
 		} else {
-			log.Println("Secret already exists. Skipping creation.")
+			log.Printf("Secret %s already exists. Skipping creation.", secretName)
 		}
 	} else {
-		log.Println("Secret created successfully.")
+		log.Printf("Secret %s created successfully.", secretName)
+	}
+}
+
+func createConfigMap(clientset *kubernetes.Clientset, configMapName string, data map[string]string) {
+	configMap := &corev1.ConfigMap{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      configMapName,
+			Namespace: getNamespace(),
+		},
+		Data: data,
+	}
+	_, err := clientset.CoreV1().ConfigMaps(getNamespace()).Create(context.TODO(), configMap, metav1.CreateOptions{})
+	if err != nil {
+		if !kubernetesErrorIsAlreadyExists(err) {
+			panic(err.Error())
+		} else {
+			log.Printf("ConfigMap %s already exists. Skipping creation.", configMapName)
+		}
+	} else {
+		log.Printf("ConfigMap %s created successfully.", configMapName)
 	}
 }
