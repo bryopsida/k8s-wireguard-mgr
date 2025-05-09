@@ -13,6 +13,8 @@ It's initial use case is to generate a wireguard server private key as a part of
 
 ## Environment variables
 
-| Name                          | Description                  |
-| ----------------------------- | ---------------------------- |
-| K8S_WG_MGR_SERVER_SECRET_NAME | Name of the secret to create |
+| Name                              | Description                                                                             |
+|-----------------------------------|-----------------------------------------------------------------------------------------|
+| K8S_WG_MGR_SERVER_SECRET_NAME     | Name of the secret to create                                                            |
+| K8S_WG_MGR_SERVER_PUBLIC_KEY_NAME | Name of the public key object to create, default uses secret name with `-public` suffix |
+| K8S_WG_MGR_SERVER_PUBLIC_KEY_TYPE | Type of public key object to create, either `secret` or `configmap`, default `secret`   |
