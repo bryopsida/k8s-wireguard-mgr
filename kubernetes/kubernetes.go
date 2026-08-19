@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"golang.zx2c4.com/wireguard/wgctrl/wgtypes"
+	"github.com/bryopsida/k8s-wireguard-mgr/wireguard"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -45,13 +45,13 @@ func GetClientSet() (*kubernetes.Clientset, error) {
 	return kubernetes.NewForConfig(config)
 }
 
-func CreateWireguardServerSecret(clientset *kubernetes.Clientset, secretName string, privateKey wgtypes.Key) bool {
+func CreateWireguardServerSecret(clientset *kubernetes.Clientset, secretName string, privateKey wireguard.Key) bool {
 	return createSecret(clientset, secretName, map[string]string{
 		"privatekey": privateKey.String(),
 	})
 }
 
-func CreateWireguardServerPublicKey(clientset *kubernetes.Clientset, name string, publicKey wgtypes.Key, objectType string) {
+func CreateWireguardServerPublicKey(clientset *kubernetes.Clientset, name string, publicKey wireguard.Key, objectType string) {
 	data := map[string]string{
 		"publickey": publicKey.String(),
 	}
